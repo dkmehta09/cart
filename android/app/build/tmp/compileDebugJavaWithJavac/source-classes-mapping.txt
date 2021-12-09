@@ -1,0 +1,14 @@
+com/card/ReactNativeFlipper.java
+ com.card.ReactNativeFlipper
+ com.card.ReactNativeFlipper$1
+ com.card.ReactNativeFlipper$2
+ com.card.ReactNativeFlipper$2$1
+com/card/MainActivity.java
+ com.card.MainActivity
+com/card/MainApplication.java
+ com.card.MainApplication
+ com.card.MainApplication$1
+com/facebook/react/PackageList.java
+ com.facebook.react.PackageList
+com/card/BuildConfig.java
+ com.card.BuildConfig
