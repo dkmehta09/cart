@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState ,useEffect} from 'react';
 
 import {
   SafeAreaView,
@@ -12,6 +12,8 @@ import {
   FlatList
 
 } from 'react-native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+
 
 const itemList = [
   {
@@ -67,6 +69,23 @@ const Index = ({ navigation }) => {
   const [count, setCount] = useState(0)
 
   const [data, setData] = useState(itemList)
+  const [itemnumber,setItem] = useState()
+
+
+  useEffect(() => {
+    getData()
+  });
+
+
+
+  const getData = async () => {
+    try {
+      const value = await AsyncStorage.getItem('itemNumber')
+      setItem(value)
+    } catch(e) {
+     console.log("error" , e)
+    }
+  }
 
   const AddItem = (id) => {
     if (count == 0) {
@@ -114,7 +133,7 @@ const Index = ({ navigation }) => {
           <Image source={require('../Images/cart.png')}
             style={Styles.CartImage}
           />
-          <Text style={Styles.number}>{count}</Text>
+          <Text style={Styles.number}>{itemnumber}</Text>
         </TouchableOpacity>
 
       </View>
@@ -158,7 +177,7 @@ const Index = ({ navigation }) => {
                   onPress={() => removeItem(item.id)}
                   style={Styles.AddButton}
                 >
-                  <Text style={{ fontSize: 15 }}> Remove</Text>
+                  <Text style={{ fontSize: 15 }}> Delete</Text>
                   {/* <Text style={{ fontSize: 15 }}> Add To Cart</Text> */}
 
                 </TouchableOpacity>
@@ -237,7 +256,7 @@ const Styles = StyleSheet.create({
     top: 0
   },
   AddButton: {
-    backgroundColor: 'lightblue',
+    backgroundColor: 'red',
     padding: 5,
     borderRadius: 10,
     alignItems: 'center'

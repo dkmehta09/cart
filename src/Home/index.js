@@ -12,6 +12,7 @@ import {
   FlatList
 
 } from 'react-native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const DATA = [
   {
@@ -66,66 +67,84 @@ const DATA = [
 
 const Index = ({ navigation }) => {
   const [show, SetShow] = useState(false);
+  const [text, setText] = useState([])
   const [count, setCount] = useState(0)
-  const [selectedId, setSelectedId] = useState(null);
+  const [selectedBrands, setSelectedBrands] = useState([]);
 
-  // const AddItem = () => {
-  //   if (count == 0) {
-  //     setCount(0)
-  //   }
-  //   else if (count > 0) {
-  //     setCount(count - 1)
-  //   }
-  // }
-
-  const showitem = (item) => {
-    
-    if(item = selectedId){
-
-      setCount(count+1)
+  const storeData = async (value) => {
+    try {
+      await AsyncStorage.setItem('itemNumber', value)
+    } catch (e) {
+      console.log("error", e)
     }
-    
   }
 
-  const Item = ({ item, onpress }) => (
-    <View style={Styles.itemView}>
+  const renderItem = ({ item, index }) => {
 
-      <View style={{ width: '30%' }}>
-        <Image source={item.image}
-          style={Styles.itemImage}
-        />
-      </View>
+    const { id, title, image } = item;
+    const isSelected = selectedBrands.filter((i) => i === id).length > 0;
 
-      <View style={{ width: '40%' }}>
-        <Text style={Styles.title} >{item.title} {count}</Text>
-      </View>
+    const AddCaart = (id) => {
+      // alert(id)
+      // const ids= id;
+      // setIds(id)
+      if (isSelected) {
+        setSelectedBrands((prev) => prev.filter((i) => i !== id));
+      } else {
+        setSelectedBrands(prev => [...prev, id])
+      }
+    }
 
-      <View style={{ width: '30%', }}>
+    const AddItem = () => {
+      if (isSelected) {
+        setCount(count - 1)
+      }
+      else {
+        setCount(count + 1)
+      }
+    }
 
-
-        <TouchableOpacity
-          onPress={onpress}
-          style={[Styles.AddButton]}
-        >
-          <Text style={{ fontSize: 15 }}> Add To Cart</Text>
-
-        </TouchableOpacity>
-      </View>
-
-    </View>
-  );
-
-  const renderItem = ({ item }) => {
-    // const setnumber = item.id === selectedId ? showitem(item.id) : null;
-     // const color = item.id === selectedId ? 'white' : 'black';
-
+    // const setIds = async (value) =>{
+    //   try {
+    //     await AsyncStorage.setItem("idsss",value)
+    //     alert(await AsyncStorage.getItem("idsss"))
+    //   } catch (error) {
+    //     console.log("error",error)
+    //   }
+    // }
     return (
-      <Item
-        item={item}
-        onpress={() => [showitem(item.id),setSelectedId(item.id)]}
-      
-      //textColor={{ color }}
-      />
+      <View style={Styles.itemView}>
+
+        <View style={{ width: '30%' }}>
+          <Image source={item.image}
+            style={Styles.itemImage}
+          />
+        </View>
+
+        <View style={{ width: '40%' }}>
+          <Text style={Styles.title} >{item.title} </Text>
+        </View>
+
+        <View style={{ width: '30%', }}>
+
+
+          <TouchableOpacity
+            onPress={() => {
+              AddCaart(id)
+              AddItem()
+            }}
+            style={[Styles.AddButton, isSelected && { backgroundColor: '#fff' }]}
+          >
+            {isSelected ?
+              <Text style={[Styles.buttonTExt]}> Remove </Text>
+              :
+              <Text style={[Styles.buttonTExt]}> Add to Cart </Text>
+            }
+
+          </TouchableOpacity>
+        </View>
+
+      </View>
     );
   };
 
@@ -141,7 +160,10 @@ const Index = ({ navigation }) => {
           </Text>
         </View>
         <TouchableOpacity
-          onPress={() => navigation.navigate('Cart')}
+          onPress={() => {
+            navigation.navigate('Cart')
+            storeData(count.toString())
+          }}
           style={{ width: '20%', paddingRight: 30, height: 50, justifyContent: 'center' }}>
           <Image source={require('../Images/cart.png')}
             style={Styles.CartImage}
@@ -237,6 +259,9 @@ const Styles = StyleSheet.create({
     padding: 5,
     borderRadius: 10,
     alignItems: 'center'
+  },
+  buttonTExt: {
+    fontSize: 15
   }
 
 })
