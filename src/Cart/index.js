@@ -14,6 +14,9 @@ import {
 } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
+import { useSelector,useDispatch} from 'react-redux'
+
+import { setName } from '../Redux/actions'
 
 const itemList = [
   {
@@ -71,13 +74,19 @@ const Index = ({ navigation }) => {
   const [data, setData] = useState(itemList)
   const [itemnumber,setItem] = useState()
 
+  const { name } = useSelector(state => state.userReducer )
+  const dispatch = useDispatch();
 
-  useEffect(() => {
+
+  useEffect(() => {    
+    
+  dispatch(setName('jai hind'))
+   
     getData()
-  });
+  },[]);
 
 
-
+ console.log("gggggg------",name)
   const getData = async () => {
     try {
       const value = await AsyncStorage.getItem('itemNumber')

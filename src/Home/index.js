@@ -14,7 +14,11 @@ import {
 } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-const DATA = [
+import { useSelector,useDispatch} from 'react-redux'
+
+import { setName } from '../Redux/actions'
+
+const itemList = [
   {
     id: "1",
     title: "Apple",
@@ -63,13 +67,15 @@ const DATA = [
   },
 ];
 
-
-
 const Index = ({ navigation }) => {
   const [show, SetShow] = useState(false);
   const [text, setText] = useState([])
   const [count, setCount] = useState(0)
   const [selectedBrands, setSelectedBrands] = useState([]);
+  const [data, setData] = useState(itemList)
+  
+  const { name } = useSelector(state => state.userReducer )
+  const dispatch = useDispatch();
 
   const storeData = async (value) => {
     try {
@@ -96,12 +102,15 @@ const Index = ({ navigation }) => {
     }
 
     const AddItem = () => {
+      
+      console.log("----------------------ddd",name)
       if (isSelected) {
         setCount(count - 1)
       }
       else {
         setCount(count + 1)
       }
+      
     }
 
     // const setIds = async (value) =>{
@@ -132,6 +141,7 @@ const Index = ({ navigation }) => {
             onPress={() => {
               AddCaart(id)
               AddItem()
+              dispatch(setName("lnjatav"))
             }}
             style={[Styles.AddButton, isSelected && { backgroundColor: '#fff' }]}
           >
@@ -174,7 +184,7 @@ const Index = ({ navigation }) => {
       </View>
       <View style={Styles.flatlist}>
         <FlatList
-          data={DATA}
+          data={data}
           renderItem={renderItem}
           keyExtractor={(item) => item.id}
         // extraData={count}
