@@ -1,0 +1,4 @@
+#Tue Dec 14 18:48:51 IST 2021
+base.0=/home/ln/MyProject/Git/cart/android/app/build/intermediates/dex/release/minifyReleaseWithR8/classes.dex
+renamed.0=classes.dex
+path.0=classes.dex

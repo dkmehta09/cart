@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 
 import {
   SafeAreaView,
@@ -9,14 +9,19 @@ import {
   TouchableOpacity,
   View,
   Image,
-  FlatList
+  FlatList,
+  I18nManager,
+  ActivityIndicator
+
 
 } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-import { useSelector,useDispatch} from 'react-redux'
+import { useSelector, useDispatch } from 'react-redux'
 
 import { setName } from '../Redux/actions'
+
+import RNRestart from "react-native-restart";
 
 const itemList = [
   {
@@ -73,9 +78,11 @@ const Index = ({ navigation }) => {
   const [count, setCount] = useState(0)
   const [selectedBrands, setSelectedBrands] = useState([]);
   const [data, setData] = useState(itemList)
-  
-  const { name } = useSelector(state => state.userReducer )
+  const [loading,setLoading] = useState(false);
+
+  const { name } = useSelector(state => state.userReducer)
   const dispatch = useDispatch();
+
 
   const storeData = async (value) => {
     try {
@@ -101,16 +108,16 @@ const Index = ({ navigation }) => {
       }
     }
 
-    const AddItem = () => {
-      
-      console.log("----------------------ddd",name)
+    const AddItem = async () => {
+
+      console.log("----------------------ddd", name)
       if (isSelected) {
         setCount(count - 1)
       }
       else {
         setCount(count + 1)
       }
-      
+
     }
 
     // const setIds = async (value) =>{
@@ -158,6 +165,19 @@ const Index = ({ navigation }) => {
     );
   };
 
+  const change = async () => {
+    setLoading(true)
+    await I18nManager.forceRTL(true);
+    console.log("helo ---------")
+    RNRestart.Restart();
+  }
+  const change2 = async () => {
+    setLoading(true)
+    await I18nManager.forceRTL(false);
+    console.log("helo ---------")
+    RNRestart.Restart();
+  }
+
   return (
     <SafeAreaView style={Styles.mainBody}>
 
@@ -182,6 +202,19 @@ const Index = ({ navigation }) => {
         </TouchableOpacity>
 
       </View>
+
+      <TouchableOpacity
+        onPress={() => change()}
+        style={{ padding: 10 }}>
+        <Text style={{ textAlign: 'left' }}> Left to right  </Text>
+      </TouchableOpacity>
+      <TouchableOpacity
+        onPress={() => change2()}
+        style={{ padding: 10 }}>
+        <Text style={{ textAlign: 'left' }}> Right to left  </Text>
+      </TouchableOpacity>
+
+
       <View style={Styles.flatlist}>
         <FlatList
           data={data}
@@ -190,6 +223,13 @@ const Index = ({ navigation }) => {
         // extraData={count}
         />
       </View>
+      {loading ? (
+        <ActivityIndicator
+          color="#F37269"
+          style={{ position: "absolute", top: 0, left: 0, right: 0, bottom: 0 }}
+          size="large"
+        />
+      ) : null}
     </SafeAreaView>
   )
 }
@@ -219,6 +259,7 @@ const Styles = StyleSheet.create({
     height: 30,
     width: 30,
     alignSelf: 'flex-end',
+
   },
   flatlist: {
     width: '100%',
@@ -231,6 +272,7 @@ const Styles = StyleSheet.create({
   },
   title: {
     fontSize: 20,
+    textAlign: 'left'
   },
   itemView: {
     backgroundColor: '#f2f2f2',

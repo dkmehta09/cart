@@ -19,6 +19,8 @@ import org.reactnative.maskedview.RNCMaskedViewPackage;
 import com.swmansion.gesturehandler.react.RNGestureHandlerPackage;
 // react-native-pager-view
 import com.reactnativepagerview.PagerViewPackage;
+// react-native-restart
+import com.reactnativerestart.RestartPackage;
 // react-native-safe-area-context
 import com.th3rdwave.safeareacontext.SafeAreaContextPackage;
 // react-native-screens
@@ -72,6 +74,7 @@ public class PackageList {
       new RNCMaskedViewPackage(),
       new RNGestureHandlerPackage(),
       new PagerViewPackage(),
+      new RestartPackage(),
       new SafeAreaContextPackage(),
       new RNScreensPackage()
     ));
